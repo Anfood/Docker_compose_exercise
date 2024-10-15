@@ -1,0 +1,22 @@
+services:
+  nodejs-frontend:
+    build: ./node-frontend
+    container_name: service1
+    ports:
+      - "8199:8199"
+    networks:
+      - containernetwork
+    depends_on:
+      - python-backend
+
+  python-backend:
+    build: ./python-backend
+    container_name: service2
+    expose:
+      - "5000"
+    networks:
+      - containernetwork
+
+networks:
+  containernetwork:
+    driver: bridge

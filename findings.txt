@@ -1,0 +1,1 @@
+The Docker containers are running on the host machine. The containers use the disk of the host for storage.
