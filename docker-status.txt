@@ -1,9 +1,17 @@
-CONTAINER ID   IMAGE                                   COMMAND                  CREATED         STATUS         PORTS                    NAMES   
-bd5151a38904   dockercomposeexercise-nodejs-frontend   "docker-entrypoint.s…"   8 seconds ago   Up 7 seconds   0.0.0.0:8199->8199/tcp   service1
-e80384335b96   dockercomposeexercise-python-backend    "python app.py"          8 seconds ago   Up 8 seconds   5000/tcp                 service2
+CONTAINER ID   IMAGE                              COMMAND                  CREATED         STATUS          PORTS
+                NAMES
+0f240429e99b   docker_compose_exercise-nginx      "/docker-entrypoint.…"   8 minutes ago   Up 13 seconds   80/tcp, 0.0.0.0:8198->8198/tcp   service3
+2cf1ad133820   docker_compose_exercise-service1   "docker-entrypoint.s…"   8 minutes ago   Up 14 seconds   8199/tcp
+                docker_compose_exercise-service1-2
+64665ff0da99   docker_compose_exercise-service1   "docker-entrypoint.s…"   8 minutes ago   Up 14 seconds   8199/tcp
+                docker_compose_exercise-service1-1
+919a1bf23683   docker_compose_exercise-service1   "docker-entrypoint.s…"   8 minutes ago   Up 13 seconds   8199/tcp
+                docker_compose_exercise-service1-3
+49a28f4d62db   docker_compose_exercise-service2   "python app.py"          8 minutes ago   Up 14 seconds   5000/tcp
+                service2
 
-NETWORK ID     NAME                                     DRIVER    SCOPE
-6301c3212cf4   bridge                                   bridge    local
-107410ed1c29   dockercomposeexercise_containernetwork   bridge    local
-15a5082d7f81   host                                     host      local
-89a60fdd5e6f   none                                     null      local
+NETWORK ID     NAME                                       DRIVER    SCOPE
+7bbd9802f644   bridge                                     bridge    local
+b09a9f587dc1   docker_compose_exercise_containernetwork   bridge    local
+15a5082d7f81   host                                       host      local
+89a60fdd5e6f   none                                       null      local
