@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<head>
+    <title>nginx test</title>
+</head>
+<body>
+    <button id="requestButton">REQUEST</button>
+    <button id="stopButton">STOP</button>
+    <br><br>
+    <textarea id="textArea" rows="75" cols="100"></textarea>
+    
+    <script>
+        document.getElementById("requestButton").addEventListener("click", async () =>{
+            try {
+                // Make a request to the backend service1
+                const response = await fetch('/api/service1');
+                // Convert the response to text
+                const text = await response.text();
+
+                // Change the text area contents as per response
+                document.getElementById("textArea").value = text;
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        });
+    </script>
+</body>
+</html>

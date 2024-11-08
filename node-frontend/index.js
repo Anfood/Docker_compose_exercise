@@ -2,6 +2,14 @@
 const http = require("http");
 const { execSync } = require('child_process');
 
+// Track if the container is asleep
+let isAsleep = false;
+
+// Function that pauses for n milliseconds
+function delay(time) {
+  return new Promise(resolve => setTimeout(resolve, time));
+}
+
 function getContainerIP() {
   const ip_address = {};
 
@@ -93,13 +101,25 @@ function getSystemInfo() {
 
 // Fetch data from backend using fetch
 async function fetchBackendData() {
-  const response = await fetch("http://python-backend:5000/");
+  const response = await fetch("http://service2:5000/");
 
   return response.json();
 }
 
 // Create an HTTP server
 const server = http.createServer(async (request, response) => {
+    // Check if the service is asleep
+    if (isAsleep) {
+      // Send a response that the service is asleep
+      // set the status code to 503 (Service Unavailable)
+      response.statusCode = 503;
+      response.end("Service is asleep");
+      return;
+    }  
+  
+    // Set the service as asleep
+    isAsleep = true;
+
     // Fetch data from the backend
     const backendJson = await fetchBackendData();
 
@@ -114,6 +134,11 @@ const server = http.createServer(async (request, response) => {
 
     // Send the combined JSON response
     response.end(JSON.stringify(combinedJson, null, 2));
+
+    // Sleep for 2 seconds
+    await delay(2000);
+    // Set the service as awake
+    isAsleep = false;
 });
 // Server start
 server.listen(8199, () => {
