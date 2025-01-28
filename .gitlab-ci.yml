@@ -38,10 +38,12 @@ job_test:
     # Use the -d flag to run the containers in the background
     # so that the terminal is not blocked by containers running in the foreground
     - docker compose up -d
-    # Add permissions to the test file
+    # Add permissions to the test files
     - chmod +x ./tests/test.sh
-    # Execute the test script
+    - chmod +x ./tests/test_api.sh
+    # Execute the test scripts
     - ./tests/test.sh
+    - ./tests/test_api.sh
     # Stop the containers in this CI/CD pipeline job_test stage
     - docker compose down
 
