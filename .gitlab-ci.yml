@@ -1,13 +1,35 @@
+# Check the Docker version
+default:
+  image: docker:latest
+  services:
+    - docker:dind
+  before_script:
+    - docker info
+
+# Telling Docker where to create the certificates Docker creates on boot
+variables:
+  DOCKER_TLS_CERTDIR: "/certs"
+
 stages:
   - build
   - test
+  - deploy
 
 job_build:
   stage: build
   script:
     - echo "Building the project"
+    - docker build -t my-docker-image .
+    # Run the Docker image and execute tests
+    - docker run my-docker-image ./tests/test.sh
 
 job_test:
   stage: test
   script:
     - echo "Running tests"
+
+job_deploy:
+  stage: deploy
+  script:
+    - echo "Deploying the project"
+    - docker compose up -d
