@@ -1,3 +1,9 @@
+# This file is used to define the pipeline for GitLab CI/CD
+# It defines a Docker image that the GitLab server uses to run the pipeline
+# Then it defines the stages of the pipeline and the jobs that run in each stage
+# It also defines the commands that run in each job, e.g. building the project
+# with Docker Compose, running tests, and deploying the project.
+
 # Set up the Docker image and services for GitLab CI/CD
 default:
   # Use the latest version of Docker
@@ -5,7 +11,7 @@ default:
   # Use the Docker-in-Docker service for GitLab CI/CD
   services:
     - docker:27.5.1-dind
-  # Check the Docker version
+  # Check and show the Docker version in GitLab terminal
   before_script:
     - docker info
 
@@ -22,7 +28,7 @@ job_build:
   stage: build
   script:
     - echo "Building the project"
-    - docker compose -f docker-compose.yml build
+    - docker compose build
 
 job_test:
   stage: test
@@ -31,16 +37,20 @@ job_test:
     # Run the tests in the Docker container
     # Use the -d flag to run the containers in the background
     # so that the terminal is not blocked by containers running in the foreground
-    - docker compose -f docker-compose.yml up -d
+    - docker compose up -d
     # Add permissions to the test file
     - chmod +x ./tests/test.sh
     # Execute the test script
     - ./tests/test.sh
-    # Stop the containers
-    - docker compose -f docker-compose.yml down
+    # Stop the containers in this CI/CD pipeline job_test stage
+    - docker compose down
 
+# Deploying the project by running the Docker Compose file
 job_deploy:
   stage: deploy
   script:
     - echo "Deploying the project"
+    # Run the default Docker Compose file
+    # Using -d flag to not block the terminal during container execution
+    # so that the CI/CD pipeline can continue running
     - docker compose up -d
