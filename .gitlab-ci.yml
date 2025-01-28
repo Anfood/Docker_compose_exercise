@@ -28,6 +28,14 @@ job_test:
   stage: test
   script:
     - echo "Running tests"
+    # Run the tests in the Docker container
+    # Use the -d flag to run the containers in the background
+    # so that the terminal is not blocked by containers running in the foreground
+    - docker compose -f docker-compose.yml up -d
+    # Execute the test script
+    - ./tests/test.sh
+    # Stop the containers
+    - docker compose -f docker-compose.yml down
 
 job_deploy:
   stage: deploy
