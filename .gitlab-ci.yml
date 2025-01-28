@@ -1,8 +1,11 @@
-# Check the Docker version
+# Set up the Docker image and services for GitLab CI/CD
 default:
+  # Use the latest version of Docker
   image: docker:27.5.1
+  # Use the Docker-in-Docker service for GitLab CI/CD
   services:
     - docker:27.5.1-dind
+  # Check the Docker version
   before_script:
     - docker info
 
@@ -19,9 +22,7 @@ job_build:
   stage: build
   script:
     - echo "Building the project"
-    - docker build -t my-docker-image .
-    # Run the Docker image and execute tests
-    - docker run my-docker-image ./tests/test.sh
+    - docker compose -f docker-compose.yml build
 
 job_test:
   stage: test
