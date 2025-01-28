@@ -1,8 +1,8 @@
 # Check the Docker version
 default:
-  image: docker:latest
+  image: docker:27.5.1
   services:
-    - docker:dind
+    - docker:27.5.1-dind
   before_script:
     - docker info
 
