@@ -1,6 +1,6 @@
 # Variables
 
-tests_passed = 1
+tests_passed=1
 
 # Test calling the /state REST API function with GET method at port 8197
 # The curl parameter -w "%{response_code}" captures  the code from the HTTP response
