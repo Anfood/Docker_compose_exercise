@@ -32,8 +32,10 @@ job_test:
     # Use the -d flag to run the containers in the background
     # so that the terminal is not blocked by containers running in the foreground
     - docker compose -f docker-compose.yml up -d
-    # Add permissions to the test file and execute the test script
+    # Add permissions to the test file
     - chmod +x ./tests/test.sh
+    # Execute the test script
+    - ./tests/test.sh
     # Stop the containers
     - docker compose -f docker-compose.yml down
 
