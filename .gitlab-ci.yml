@@ -41,8 +41,6 @@ job_test:
     # Use the -d flag to run the containers in the background
     # so that the terminal is not blocked by containers running in the foreground
     - docker compose up -d --wait
-    # Introducing 30 sec delay for the containers to start
-    - sleep 30
     # Add permissions to the test files
     - chmod +x ./tests/test.sh
     - chmod +x ./tests/test_api.sh
