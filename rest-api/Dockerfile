@@ -1,8 +1,9 @@
 # Use node js image and Linux Alpine as the operating system for the container
-FROM node:22-alpine
+FROM node:alpine
 
 # Set the working directory
-WORKDIR /usr/src/app
+RUN mkdir /app
+WORKDIR /app
 
 # Copy package.json and package-lock.json to the working directory in the container
 COPY package*.json ./
@@ -17,4 +18,4 @@ COPY . .
 EXPOSE 8197
 
 # Run the API server
-CMD ["node", "index.js"]
+CMD ["npm", "start"]

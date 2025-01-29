@@ -33,8 +33,8 @@ services:
   rest-api:
     build: ./rest-api
     container_name: service4
-    expose:
-      - "8197"
+    ports:
+      - "8197:8197"
     networks:
       - containernetwork
     depends_on:
