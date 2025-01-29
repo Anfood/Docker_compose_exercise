@@ -8,7 +8,7 @@ response=$(curl --write-out "%{http_code}" --silent --output /dev/null "$url")
 # Checking if the response code is 200
 if [ "$response" == '200' ]; then
     echo "Test passed: Received 200 OK"
-    tests_passed = 0
+    tests_passed=0
 else
     echo "Test failed: Expected 200, but got $response"
 fi
