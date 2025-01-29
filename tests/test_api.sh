@@ -2,12 +2,18 @@
 url='localhost:8197/api/state'
 tests_passed=1
 
+# Debug: Test Google curl
+debug_response=$(curl --write-out "%{http_code}" --silent --output /dev/null "https://www.google.com")
+
+# Debug:Print Google response
+echo "Response from https://www.google.com: $debug_response"
+
+
 # Test calling the /state REST API function with GET method at port 8197
-# The curl parameter -w "%{response_code}" captures  the code from the HTTP response
-# Parameter -s makes the terminal silent during curl call
-# Parameter -X is used to specify the HTTP method
-# The response code is stored in a variable
 response=$(curl --write-out "%{http_code}" --silent --output /dev/null "$url")
+
+# Debugging: Print response
+echo "Response: $response"
 
 # Checking if the response code is 200
 if [ "$response" == '200' ]; then
@@ -16,5 +22,8 @@ if [ "$response" == '200' ]; then
 else
     echo "Test failed: Expected 200, but got $response"
 fi
+
+# Debugging: Print tests_passed
+echo "Tests passed: $tests_passed"
 
 exit $tests_passed
