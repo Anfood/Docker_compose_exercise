@@ -1,5 +1,5 @@
 # Variables
-url='http://localhost:8197/api/state'
+url='http://service4:8197/api/state'
 tests_passed=1
 
 # Test calling the /state REST API function with GET method at port 8197
