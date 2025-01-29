@@ -40,7 +40,7 @@ job_test:
     # Run the tests in the Docker container
     # Use the -d flag to run the containers in the background
     # so that the terminal is not blocked by containers running in the foreground
-    - docker compose up -d
+    - docker compose up -d --wait
     # Add permissions to the test files
     - chmod +x ./tests/test.sh
     - chmod +x ./tests/test_api.sh
