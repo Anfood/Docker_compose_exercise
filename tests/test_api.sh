@@ -1,5 +1,5 @@
 # Variables
-
+url='localhost:8197/api/state'
 tests_passed=1
 
 # Test calling the /state REST API function with GET method at port 8197
@@ -7,10 +7,10 @@ tests_passed=1
 # Parameter -s makes the terminal silent during curl call
 # Parameter -X is used to specify the HTTP method
 # The response code is stored in a variable
-response=$(curl -s -w "%{response_code}" localhost:8197/api/state -X GET)
+response=$(curl --write-out "%{http_code}" --silent --output /dev/null "$url")
 
 # Checking if the response code is 200
-if [[ "$response" == *200 ]]; then
+if [[ "$response" == '200' ]]; then
     echo "Test passed: Received 200 OK"
     tests_passed = 0
 else
