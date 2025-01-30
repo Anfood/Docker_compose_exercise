@@ -8,37 +8,38 @@ services:
     networks:
       - containernetwork
     depends_on:
-      - service2           
+      - service2      
 
   service2:
     build: ./python-backend
-    container_name: service2
+    container_name: service2_python-backend
     expose:
       - "5000"
     networks:
       - containernetwork
   nginx:
     build: ./nginx-webserver
-    container_name: service3
+    container_name: service3_nginx
     volumes:
       - ./nginx-webserver/site-content:/usr/data
     ports:
       - "8198:8198"
+      - "8197:8197"
     networks:
       - containernetwork
     depends_on:
       - service1
       - service2
-
+      - rest-api
   rest-api:
     build: ./rest-api
-    container_name: service4
-    ports:
-      - "8197:8197"
+    container_name: service4_rest-api
+    expose:
+      - "8000"
     networks:
       - containernetwork
     depends_on:
-      - service1 
+      - service1
       - service2
 networks:
   containernetwork:

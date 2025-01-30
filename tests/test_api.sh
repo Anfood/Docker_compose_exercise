@@ -1,5 +1,5 @@
 # Variables
-url='docker:8197/api/state'
+url='docker:8197/state'
 tests_passed=1
 
 # Test calling the /state REST API function with GET method at port 8197

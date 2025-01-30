@@ -133,6 +133,7 @@ const server = http.createServer(async (request, response) => {
     };
 
     // Send the combined JSON response
+    response.writeHead(200, { "Content-Type": "application/json" });
     response.end(JSON.stringify(combinedJson, null, 2));
 
     // Sleep for 2 seconds

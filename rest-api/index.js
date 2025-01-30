@@ -1,11 +1,22 @@
 const express= require('express');
 const app = express();
-const PORT = 8197;
+const PORT = 8000;
 
-app.get('/api/state', (req, res) => {
-    res.writeHead(200, {'Content-Type': 'text/plain'});
-    res.write('Service is running!');
-    res.end();
+app.get('/state', async (req, res) => {
+    try {
+        // Fetch the state from the node-frontend
+        const response = await fetch("http://service1:8199");
+        const state = await response.json();
+        // The response from the fetch is in JSON format
+        // We need to set the response of this get request to text/plain
+        res.setHeader("Content-Type", "text/plain");
+        // Convert the JSON response to a string containing the status code
+        res.send(JSON.stringify(state, null, 2));
+    } catch (error) {
+        res.status(503).send("Service is asleep");
+        console.error(error);
+    }
+
 });
 
 app.listen(PORT, () => {
