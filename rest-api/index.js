@@ -60,7 +60,7 @@ app.put('/state', (req, res) => {
     }
 });
 
-// Fetch response from service1
+// Fetch backend data from service1
 app.get('/request', async (req, res) => {
     try {
         const response = await fetch('http://service1:8199/');
