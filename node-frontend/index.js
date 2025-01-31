@@ -121,15 +121,30 @@ async function fetchBackendData() {
   return response.json();
 }
 
+// Function to change the states of this service
+function changeState(newState) {
+  // Check if the new state is a valid state
+  if (states.includes(newState)) {
+    // Add the new state to the state log
+    stateLog.push({
+      state: newState,
+      timestamp: new Date().toISOString(),
+    });
+    // Set the state to the new state
+    state = newState;
+  }
+}
+
 // Create an HTTP server
 const server = http.createServer(async (request, response) => {
   // Handle the GET state request from rest-api
   if (request.method === "GET" && request.url === "/state") {
-    console.log("GET /state from service1");
+    console.log("Received GET request to service1 for state from rest-api");
 
     // If the state is not PAUSED, respond with the state
     response.writeHead(200, { "Content-Type": "text/plain" });
     response.end(state);
+    console.log("Responded with state: " + state);
     return;
   }
   // Handle the data fetching request from UI
@@ -140,7 +155,7 @@ const server = http.createServer(async (request, response) => {
   }
 
   // Set the service as "PAUSED"
-  state = "PAUSED";
+  changeState("PAUSED");
 
   // Fetch data from the backend
   const backendJson = await fetchBackendData();
@@ -161,7 +176,7 @@ const server = http.createServer(async (request, response) => {
   // Sleep for 2 seconds
   await delay(2000);
   // Set the service as awake
-  state = "RUNNING";
+  changeState("RUNNING");
 });
 // Server start
 server.listen(8199, () => {});
