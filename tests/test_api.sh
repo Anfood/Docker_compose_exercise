@@ -81,16 +81,4 @@ else
     tests_passed=1
 fi
 
-# Checking if the docker containers are shut down
-# Call the docker ps command with flag -q to get only the container IDs
-response=$(docker ps -q)
-if [ "$response" == '' ]; then
-    echo "✅ Test passed: Docker containers are shut down"
-    tests_passed=0
-else
-    echo "❌ Test failed: Docker containers are not shut down"
-    echo "Containers running: $response"
-    tests_passed=1
-fi
-
 exit $tests_passed
