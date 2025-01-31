@@ -79,7 +79,7 @@ if [ "$response" == '' ]; then
     tests_passed=0
 else
     echo "❌ Test failed: Docker containers are not shut down"
-    echo "State: $response"
+    echo "Containers running: $response"
     tests_passed=1
 fi
 

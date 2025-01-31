@@ -135,6 +135,11 @@ function changeState(newState) {
   }
 }
 
+// Function to get the state
+function getState() {
+  return state;
+}
+
 // Create an HTTP server
 const server = http.createServer(async (request, response) => {
   // Handle the GET state request from rest-api
