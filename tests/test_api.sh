@@ -16,7 +16,7 @@ fi
 
 # Checking if the state is "INIT"
 
-response=$(curl -silent "$url/state")
+response=$(curl --silent "$url/state")
 if ["$response" == 'INIT']; then
     echo "✅ Test passed: State is INIT"
     tests_passed=0
@@ -30,7 +30,7 @@ fi
 # Make the PUT request
 response=$(curl -X PUT "$url/state" -d "RUNNING" \
     -H "Content-Type: text/plain" \
-    -H "Accept: text/plain")
+    -H "Accept: text/plain" --write-out "%{http_code}" --silent --output /dev/null)
 # Check if the state is "RUNNING"
 if ["$response" == '200']; then
     echo "✅ Test passed: Received 200 OK for /PUT 'RUNNING' state"
@@ -45,7 +45,7 @@ fi
 # Make the PUT request
 response=$(curl -X PUT "$url/state" -d "PAUSED" \
     -H "Content-Type: text/plain" \
-    -H "Accept: text/plain")
+    -H "Accept: text/plain" --write-out "%{http_code}" --silent --output /dev/null)
 # Check if the state is "PAUSED"
 if ["$response" == '200']; then
     echo "✅ Test passed: Received 200 OK for /PUT 'PAUSED' state"
@@ -60,7 +60,7 @@ fi
 # Make the PUT request
 response=$(curl -X PUT "$url/state" -d "SHUTDOWN" \
     -H "Content-Type: text/plain" \
-    -H "Accept: text/plain")
+    -H "Accept: text/plain" --write-out "%{http_code}" --silent --output /dev/null)
 # Check if the containers are shut down
 if ["$response" == '200']; then
     echo "✅ Test passed: Received 200 OK for /PUT 'SHUTDOWN' state"
