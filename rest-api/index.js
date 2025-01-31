@@ -11,7 +11,7 @@ app.get('/state', async (req, res) => {
         // We need to set the response of this get request to text/plain
         res.setHeader("Content-Type", "text/plain");
         // Convert the JSON response to a string containing the status code
-        res.send(JSON.stringify(state, null, 2));
+        res.status(response.status).send(JSON.stringify(state, null, 2));
     } catch (error) {
         res.status(503).send("Service is asleep");
         console.error(error);

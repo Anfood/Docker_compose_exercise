@@ -112,8 +112,8 @@ const server = http.createServer(async (request, response) => {
     if (isAsleep) {
       // Send a response that the service is asleep
       // set the status code to 503 (Service Unavailable)
-      response.statusCode = 503;
-      response.end("Service is asleep");
+      response.writeHead(503, { "Content-Type": "application/json" });
+      response.end(JSON.stringify({ message: "503: Service is asleep" }, null, 2));
       return;
     }  
   

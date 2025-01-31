@@ -13,4 +13,13 @@ else
     echo "Test failed: Expected 200, but got $response"
 fi
 
+# Checking if the state is "RUNNING"
+if [response=$(curl -silent $url) == 'RUNNING']; then
+    echo "Test passed: State is RUNNING"
+    tests_passed=0
+else
+    echo "Test failed: State is not RUNNING"
+    echo "State: $response"
+fi
+
 exit $tests_passed
