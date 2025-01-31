@@ -60,6 +60,17 @@ app.put('/state', (req, res) => {
     }
 });
 
+// Fetch response from service1
+app.get('/request', async (req, res) => {
+    try {
+        const response = await fetch('http://service1:8199/');
+        const data = await response.text();
+        res.status(200).send(data);
+    } catch (error) {
+        res.status(500).send(`Error fetching data from service1: ${error.message}`);
+    }
+});
+
 // Load the state from the file
 app.get('/state', (req, res) => {
     res.status(200).send(state);

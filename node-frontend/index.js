@@ -2,6 +2,9 @@
 const http = require("http");
 const { execSync } = require("child_process");
 
+// Using axios to make HTTP requests to the API
+const axios = require("axios");
+
 // defining the states of this service
 const states = ["INIT", "PAUSED", "RUNNING", "SHUTDOWN"];
 
@@ -15,6 +18,18 @@ let stateLog = []; // TODO: Make a function to populate this.
 function delay(time) {
   console.log(`Pausing for ${time} milliseconds`);
   return new Promise((resolve) => setTimeout(resolve, time));
+}
+
+// Function to change the state using the rest-api
+async function changeState(newState) {
+  try {
+    const response = await axios.put("http://rest-api:8000/state", newState, {
+      headers: { "Content-Type": "text/plain" },
+    });
+    console.log(`State changed to: ${response.data}`);
+  } catch (error) {
+    console.error(`Error changing state: ${error.response.data}`);
+  }
 }
 
 function getContainerIP() {
@@ -119,20 +134,6 @@ async function fetchBackendData() {
   const response = await fetch("http://service2:5000/");
 
   return response.json();
-}
-
-// Function to change the states of this service
-function changeState(newState) {
-  // Check if the new state is a valid state
-  if (states.includes(newState)) {
-    // Add the new state to the state log
-    stateLog.push({
-      state: newState,
-      timestamp: new Date().toISOString(),
-    });
-    // Set the state to the new state
-    state = newState;
-  }
 }
 
 // Function to get the state

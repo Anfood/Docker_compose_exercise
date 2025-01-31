@@ -56,6 +56,16 @@ else
     tests_passed=1
 fi
 
+# Checking if GET /request returns repsonds with 200 status
+response=$(curl --write-out "%{http_code}" --silent --output /dev/null "$url/request")
+if [ "$response" == '200' ]; then
+    echo "✅ Test passed: Received 200 OK for /GET request"
+    tests_passed=0
+else
+    echo "❌ Test failed: Expected 200, but got $response"
+    tests_passed=1
+fi
+
 # Checking if the containers are shut down after calling the "SHUTDOWN" PUT /state REST API function
 # Make the PUT request
 response=$(curl -X PUT "$url/state" -d "SHUTDOWN" \
