@@ -1,39 +1,52 @@
 // Import http for creating an HTTP server and execSync for executing shell commands
 const http = require("http");
-const { execSync } = require('child_process');
+const { execSync } = require("child_process");
 
-// Track if the container is asleep
-let isAsleep = false;
+// defining the states of this service
+const states = ["INIT", "PAUSED", "RUNNING", "SHUTDOWN"];
+
+// Defining the initial state when the user starts the application
+let state = "INIT";
+
+// Creating a simple list to log tha state changes
+let stateLog = []; // TODO: Make a function to populate this.
 
 // Function that pauses for n milliseconds
 function delay(time) {
-  return new Promise(resolve => setTimeout(resolve, time));
+  console.log(`Pausing for ${time} milliseconds`);
+  return new Promise((resolve) => setTimeout(resolve, time));
 }
 
 function getContainerIP() {
   const ip_address = {};
 
   // Get IPv4 by executing terminal command to get address of eth0
-  const ipv4 = execSync("/sbin/ifconfig eth0 | grep 'inet addr:' | cut -d: -f2 | awk '{ print $1}'")
-    .toString().trim();
+  const ipv4 = execSync(
+    "/sbin/ifconfig eth0 | grep 'inet addr:' | cut -d: -f2 | awk '{ print $1}'"
+  )
+    .toString()
+    .trim();
   // Check if IPV4 is found
-  if (ipv4 ) {
+  if (ipv4) {
     // Add the address to the ip_address object
     ip_address.ipv4 = ipv4;
   }
 
   // Get IPv6
-  const ipv6 = execSync("/sbin/ifconfig eth0 | grep 'inet6 addr:' | cut -d: -f2 | awk '{ print $1}'")
-    .toString().trim();
+  const ipv6 = execSync(
+    "/sbin/ifconfig eth0 | grep 'inet6 addr:' | cut -d: -f2 | awk '{ print $1}'"
+  )
+    .toString()
+    .trim();
   // Check if IpV6 exists
-  if (ipv6 ) {
+  if (ipv6) {
     // Add the address to the ip_address object
     ip_address.ipv6 = ipv6;
   }
 
   if (!ipv4 && !ipv6) {
     return "No IP address found";
-  } 
+  }
 
   return ip_address;
 }
@@ -43,7 +56,9 @@ function getProcesses() {
   // Execute terminal command to get the processes
   // With -e -o you can specify the columns you want to display
   // Skips the header row
-  const output = execSync("ps -e -o user,pid,start,time,comm --no-heading").toString();
+  const output = execSync(
+    "ps -e -o user,pid,start,time,comm --no-heading"
+  ).toString();
   // Split the output to lines
   const lines = output.trim().split("\n");
 
@@ -108,40 +123,45 @@ async function fetchBackendData() {
 
 // Create an HTTP server
 const server = http.createServer(async (request, response) => {
-    // Check if the service is asleep
-    if (isAsleep) {
-      // Send a response that the service is asleep
-      // set the status code to 503 (Service Unavailable)
-      response.writeHead(503, { "Content-Type": "application/json" });
-      response.end(JSON.stringify({ message: "503: Service is asleep" }, null, 2));
-      return;
-    }  
-  
-    // Set the service as asleep
-    isAsleep = true;
+  // Handle the GET state request from rest-api
+  if (request.method === "GET" && request.url === "/state") {
+    console.log("GET /state from service1");
 
-    // Fetch data from the backend
-    const backendJson = await fetchBackendData();
+    // If the state is not PAUSED, respond with the state
+    response.writeHead(200, { "Content-Type": "text/plain" });
+    response.end(state);
+    return;
+  }
+  // Handle the data fetching request from UI
+  if (state === "PAUSED") {
+    response.writeHead(503, { "Content-Type": "text/plain" });
+    response.end("503: Service is paused. Please wait for " + "two seconds.");
+    return;
+  }
 
-    // Get the frontend container info
-    const service1info = getSystemInfo();
+  // Set the service as "PAUSED"
+  state = "PAUSED";
 
-    // Combine the frontend and backend data
-    const combinedJson = {
-      service1: service1info,
-      service2: backendJson,
-    };
+  // Fetch data from the backend
+  const backendJson = await fetchBackendData();
 
-    // Send the combined JSON response
-    response.writeHead(200, { "Content-Type": "application/json" });
-    response.end(JSON.stringify(combinedJson, null, 2));
+  // Get the frontend container info
+  const service1info = getSystemInfo();
 
-    // Sleep for 2 seconds
-    await delay(2000);
-    // Set the service as awake
-    isAsleep = false;
+  // Combine the frontend and backend data
+  const combinedJson = {
+    service1: service1info,
+    service2: backendJson,
+  };
+
+  // Send the combined JSON response
+  response.writeHead(200, { "Content-Type": "application/json" });
+  response.end(JSON.stringify(combinedJson, null, 2));
+
+  // Sleep for 2 seconds
+  await delay(2000);
+  // Set the service as awake
+  state = "RUNNING";
 });
 // Server start
-server.listen(8199, () => {
-
-});
+server.listen(8199, () => {});
